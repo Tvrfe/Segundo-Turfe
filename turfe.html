@@ -68,7 +68,6 @@
 
         let qtd_cavalos = Number(select_qtd_cavalo.value);
         let qtdVoltas = Number(select_voltas.value);
-
         let erro = false;
 
         if (select_qtd_cavalo.value == "") {
@@ -153,6 +152,7 @@
                 ax_volta = true
             }
         }
+
         if(ax_volta == false){
             for(let i = 0; i < qtdVoltas; i ++){
         div_msg.innerHTML += `<br>Volta ${i + 1} <br>`
