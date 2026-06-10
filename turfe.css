@@ -1,0 +1,31 @@
+        body{
+            background-color: #f8f8f7;
+            font-family: 'Times New Roman', Times, serif;
+            color: black;
+        }
+        .container{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+         }  
+               
+        .titulo{
+            font-size: 50px;
+            font-family: 'Times New Roman', Times, serif;
+            color: black;
+            margin-top: 20px;
+        }
+        .texto{
+            font-size: 20px;
+            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+        }
+            .botao{
+            padding:10px; 
+            border-radius:5px; 
+            background-color:#f8f8f7; 
+            color:black;
+            font-size: 20px;
+            }
+
+       
