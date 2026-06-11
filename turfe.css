@@ -165,12 +165,16 @@ body {
     color: black;
 }
 
-/* ── CORRIDA ── */
 #tela-corrida {
     background: #1a1a1a;
     color: white;
     padding: 20px;
     box-sizing: border-box;
+    background-image: url(imagem_de_fundo.png);
+    background-position: center;
+    background-size: 100% 100%;
+    position: relative;
+    min-height: 100vh;
 }
 
 #corrida-header {
@@ -185,71 +189,84 @@ body {
 #pista-container {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    padding: 0 10px;
+    gap: 15px; /* Espaço entre o cavalo de cima e o de baixo */
+    padding: 0;
+    position: absolute;
+    
+    /* Move todo o bloco para a pista de terra de baixo */
+    top: 450px;   /* Ajuste esse valor para descer ou subir os dois cavalos juntos */
+    left: 120px;  /* Alinha o início da corrida */
+    width: 78%;   /* Largura total da corrida */
 }
 
 .pista-linha {
     display: flex;
     align-items: center;
-    gap: 10px;
+    height: 80px; /* Altura de cada raia para os cavalos maiores */
 }
 
 .pista-nome {
-    width: 110px;
+    width: 50px;
     font-family: Impact, sans-serif;
-    font-size: 15px;
+    font-size: 24px; /* Aumentado para acompanhar o tamanho dos cavalos */
     color: #fff;
     text-align: right;
     flex-shrink: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding-right: 15px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .pista-trilho {
     flex: 1;
-    height: 64px;
-    background: #2e7d32;
-    border-radius: 6px;
+    height: 100%;
     position: relative;
-    overflow: hidden;
-    border: 2px solid #555;
+    border: none; 
+    background: transparent;
 }
 
 .linha-chegada {
     position: absolute;
-    right: 6%;
+    /* Ajustado para alinhar com a faixa quadriculada do chão */
+    right: 11%; 
     top: 0;
     bottom: 0;
-    width: 4px;
+    width: 6px;
     background: repeating-linear-gradient(
         to bottom,
         white 0px, white 8px,
         black 8px, black 16px
     );
     z-index: 2;
+    opacity: 0; /* Deixei invisível (0) pois o fundo já tem a faixa quadriculada. Se quiser ver a linha do código, mude para 1 */
 }
 
 .cavalo-corrida {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    height: 52px;
+    height: 75px; /* Cavalos maiores para preencher a pista de terra */
     width: auto;
-    transition: left 2.5s ease;
+    transition: left 0.1s linear; 
     z-index: 3;
     image-rendering: pixelated;
+    left: 0px;
 }
 
 #podio-container {
-    margin-top: 24px;
-    text-align: center;
-    background: #111;
+    position: absolute;
+    left: 30px;
+    top: 150px; /* Subiu o pódio para não ficar em cima dos cavalos correndo */
+    width: 250px;
+    background: rgba(17, 17, 17, 0.85);
     border-radius: 10px;
-    padding: 20px;
+    padding: 15px;
     color: white;
     font-family: 'Times New Roman', serif;
-    font-size: 20px;
-    line-height: 2;
+    font-size: 16px;
+    line-height: 1.6;
+    text-align: left;
+    z-index: 10;
 }
