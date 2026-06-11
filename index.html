@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="turfe.css">
+    <title>Extreme Go Horse</title>
+</head>
+<body>
+    <audio id="musica" src="Miserlou.mp3" loop></audio>
+
+    <!-- TELA 1: Subindex -->
+    <div id="tela-subindex" class="tela tela-preta">
+        <button class="botao-comecar" onclick="irPara('tela-menu')">COMEÇAR</button>
+    </div>
+
+    <!-- TELA 2: Menu -->
+    <div id="tela-menu" class="tela escondido tela-menu-layout">
+        <div class="menu-esquerda animado">
+            <h1 class="titulo-extreme">EXTREME<br>GO HORSE</h1>
+            <button class="botao botao-jogar" onclick="irPara('tela-configurar')">JOGAR</button>
+        </div>
+        <div class="menu-direita animado">
+            <img src="Cavaloex-removebg-preview.png" class="cavalo-menu">
+        </div>
+    </div>
+
+    <!-- TELA 3: Configurar corrida -->
+    <div id="tela-configurar" class="tela escondido">
+        <div class="container">
+            <h2 class="titulo">Configurar Corrida</h2>
+            <div class="texto">Quantidade de Cavalos</div>
+            <select id="select_qtd_cavalo">
+                <option value="">Selecione..</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+            </select><br>
+            <div class="texto">Quantidade de Voltas</div>
+            <select id="select_voltas">
+                <option value="">Selecione..</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+            </select><br>
+            <div id="msg_configurar" class="texto-msg"></div>
+            <button class="botao" onclick="cadastrarCorrida()">CADASTRAR CORRIDA</button>
+        </div>
+    </div>
+
+    <!-- TELA 4: Cadastrar cavalos -->
+    <div id="tela-cavalos" class="tela escondido">
+        <div class="container">
+            <h2 class="titulo">Cadastrar Cavalos</h2>
+            <div id="info_cavalos" class="texto"></div><br>
+            <div class="texto">Nome do Cavalo</div>
+            <input type="text" id="ipt_nome"><br>
+            <div id="msg_cavalos" class="texto-msg"></div>
+            <button class="botao" onclick="cadastrarCavalo()">CADASTRAR CAVALO</button>
+            <button class="botao" id="btn_volta" onclick="irPara('tela-corrida')" disabled>DAR UMA VOLTA</button>
+        </div>
+    </div>
+
+    <!-- TELA 5: Corrida -->
+    <div id="tela-corrida" class="tela escondido">
+        <div id="corrida-header">
+            <span id="volta-info" class="texto"></span>
+        </div>
+        <div id="pista-container"></div>
+        <div id="podio-container" class="escondido">
+            <div id="podio-msg"></div>
+            <button class="botao" onclick="irPara('tela-menu')">🔁 Jogar Novamente</button>
+        </div>
+    </div>
+
+    <script>
+        let nomecavalos = [];
+        let qtdCavalos = 0;
+        let qtdVoltas = 0;
+        let voltaAtual = 0;
+        let temposParciais = [];
+        let posicoes = []; // posição visual de cada cavalo (0 a 100%)
+        let frameInterval = null;
+        let frames = [1, 2, 3];
+        let frameAtual = 0;
+        let cavaloFrameInterval = null;
+
+        // sprites: cavalo i usa Cavalo(i+1)_1.png, _2.png, _3.png
+        function getSprite(indiceCavalo, frame) {
+            return `Cavalo${indiceCavalo + 1}_${frame}.png`;
+        }
+
+        function irPara(telaId) {
+            document.querySelectorAll('.tela').forEach(t => t.classList.add('escondido'));
+            document.getElementById(telaId).classList.remove('escondido');
+
+            if (telaId === 'tela-menu') {
+                musica.play();
+                document.querySelectorAll('.animado').forEach(el => el.classList.remove('visivel'));
+                setTimeout(() => {
+                    document.querySelectorAll('.animado').forEach(el => el.classList.add('visivel'));
+                }, 6000);
+            }
+
+            if (telaId === 'tela-corrida') {
+                iniciarCorrida();
+            }
+        }
+
+        function cadastrarCorrida() {
+            qtdCavalos = Number(select_qtd_cavalo.value);
+            qtdVoltas = Number(select_voltas.value);
+
+            if (select_qtd_cavalo.value == "") { msg_configurar.innerHTML = "Selecione a quantidade de cavalos."; return; }
+            if (select_voltas.value == "") { msg_configurar.innerHTML = "Selecione a quantidade de voltas."; return; }
+
+            nomecavalos = [];
+            temposParciais = new Array(qtdCavalos).fill(0);
+            voltaAtual = 0;
+            btn_volta.disabled = true;
+            info_cavalos.innerHTML = `Cadastre ${qtdCavalos} cavalos para ${qtdVoltas} voltas.`;
+            msg_cavalos.innerHTML = "";
+            ipt_nome.value = "";
+            irPara('tela-cavalos');
+        }
+
+        function cadastrarCavalo() {
+            let nome = ipt_nome.value.trim();
+            if (nome == "") { alert("Digite o nome do cavalo."); return; }
+            if (nomecavalos.length >= qtdCavalos) { msg_cavalos.innerHTML = "Todos os cavalos já foram cadastrados."; return; }
+
+            nomecavalos.push(nome);
+            ipt_nome.value = "";
+
+            let faltam = qtdCavalos - nomecavalos.length;
+            if (faltam > 0) {
+                msg_cavalos.innerHTML = `Cavalo <b>${nome}</b> cadastrado! Faltam ${faltam} cavalo(s).`;
+            } else {
+                msg_cavalos.innerHTML = `Cavalo <b>${nome}</b> cadastrado! Todos prontos!`;
+                btn_volta.disabled = false;
+            }
+        }
+
+        function iniciarCorrida() {
+            voltaAtual = 0;
+            temposParciais = new Array(qtdCavalos).fill(0);
+            posicoes = new Array(qtdCavalos).fill(0);
+            frameAtual = 0;
+
+            // Para qualquer animação anterior
+            if (cavaloFrameInterval) clearInterval(cavaloFrameInterval);
+
+            // Monta a pista
+            montarPista();
+
+            // Anima os frames dos cavalos
+            cavaloFrameInterval = setInterval(() => {
+                frameAtual = (frameAtual % 3) + 1;
+                for (let i = 0; i < qtdCavalos; i++) {
+                    let img = document.getElementById(`cavalo-img-${i}`);
+                    if (img) img.src = getSprite(i, frameAtual);
+                }
+            }, 150);
+
+            volta_info.innerHTML = "🏁 Corrida iniciando...";
+            podio_container.classList.add('escondido');
+
+            setTimeout(executarVolta, 3000);
+        }
+
+        function montarPista() {
+            let pista = document.getElementById('pista-container');
+            pista.innerHTML = '';
+
+            for (let i = 0; i < qtdCavalos; i++) {
+                let linha = document.createElement('div');
+                linha.className = 'pista-linha';
+                linha.innerHTML = `
+                    <div class="pista-nome">${nomecavalos[i]}</div>
+                    <div class="pista-trilho" id="trilho-${i}">
+                        <div class="linha-chegada"></div>
+                        <img id="cavalo-img-${i}" src="${getSprite(i, 1)}" class="cavalo-corrida" style="left: 0%">
+                    </div>
+                `;
+                pista.appendChild(linha);
+            }
+        }
+
+        function executarVolta() {
+            voltaAtual++;
+            volta_info.innerHTML = `Volta ${voltaAtual} de ${qtdVoltas}`;
+
+            let temposVolta = [];
+            for (let i = 0; i < qtdCavalos; i++) {
+                let tempoVolta = Math.round((Math.random() * 5 + 3) * 10) / 10;
+                temposParciais[i] += tempoVolta;
+                temposVolta.push(tempoVolta);
+            }
+
+            // Calcula posições baseadas no tempo total (menos tempo = mais à frente)
+            // Menor tempo acumulado = posição mais à frente (próximo de 95%)
+            let minTempo = Math.min(...temposParciais);
+            let maxTempo = Math.max(...temposParciais);
+            let range = maxTempo - minTempo || 1;
+
+            // Avança proporcionalmente: quem terminou mais cedo chega mais à frente
+            // Progresso geral da corrida: voltaAtual/qtdVoltas
+            let progressoGeral = voltaAtual / qtdVoltas;
+
+            for (let i = 0; i < qtdCavalos; i++) {
+                // Posição relativa: quem tem menor tempo fica mais à frente
+                let relativo = (maxTempo - temposParciais[i]) / range; // 0 a 1, 1 = mais rápido
+                // Posição na pista: entre (progressoGeral - 0.15) e progressoGeral
+                posicoes[i] = (progressoGeral - 0.12 + relativo * 0.12) * 92;
+                posicoes[i] = Math.max(0, Math.min(92, posicoes[i]));
+
+                let img = document.getElementById(`cavalo-img-${i}`);
+                if (img) img.style.left = posicoes[i] + '%';
+            }
+
+            if (voltaAtual < qtdVoltas) {
+                setTimeout(executarVolta, 3000);
+            } else {
+                // Última volta: leva todos até a linha de chegada e exibe pódio
+                setTimeout(() => {
+                    for (let i = 0; i < qtdCavalos; i++) {
+                        let img = document.getElementById(`cavalo-img-${i}`);
+                        if (img) img.style.left = '92%';
+                    }
+                    clearInterval(cavaloFrameInterval);
+                    exibirPodio();
+                }, 1500);
+            }
+        }
+
+        function exibirPodio() {
+            let resultados = nomecavalos.map((nome, i) => ({ nome, tempo: temposParciais[i] }));
+            resultados.sort((a, b) => a.tempo - b.tempo);
+
+            let medalhas = ["🥇", "🥈", "🥉"];
+            let html = `<h3>🏆 Pódio da Corrida</h3>`;
+            for (let i = 0; i < Math.min(resultados.length, 3); i++) {
+                html += `${medalhas[i]} <b>${i + 1}º Lugar: ${resultados[i].nome}</b> — ${resultados[i].tempo.toFixed(1)}s<br><br>`;
+            }
+            podio_msg.innerHTML = html;
+            podio_container.classList.remove('escondido');
+            volta_info.innerHTML = "Corrida finalizada!";
+        }
+    </script>
+</body>
+</html>

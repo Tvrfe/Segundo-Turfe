@@ -1,31 +1,255 @@
-        body{
-            background-color: #f8f8f7;
-            font-family: 'Times New Roman', Times, serif;
-            color: black;
-        }
-        .container{
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-         }  
-               
-        .titulo{
-            font-size: 50px;
-            font-family: 'Times New Roman', Times, serif;
-            color: black;
-            margin-top: 20px;
-        }
-        .texto{
-            font-size: 20px;
-            font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
-        }
-            .botao{
-            padding:10px; 
-            border-radius:5px; 
-            background-color:#f8f8f7; 
-            color:black;
-            font-size: 20px;
-            }
+body {
+    background-color: #f8f8f7;
+    font-family: 'Times New Roman', Times, serif;
+    color: black;
+    margin: 0;
+    padding: 0;
+}
 
-       
+.tela {
+    min-height: 100vh;
+    width: 100%;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 40px;
+    gap: 10px;
+}
+
+.titulo {
+    font-size: 50px;
+    font-family: 'Times New Roman', Times, serif;
+    color: black;
+    margin-top: 20px;
+}
+
+.titulo-extreme {
+    font-size: 72px;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    text-align: center;
+    color: #b30000;
+    text-shadow: 3px 3px 0px #000;
+    letter-spacing: 4px;
+    margin-bottom: 40px;
+}
+
+.texto {
+    font-size: 20px;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+.texto-msg {
+    font-size: 16px;
+    font-family: 'Times New Roman', Times, serif;
+    min-height: 24px;
+}
+
+.botao {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f8f8f7;
+    color: black;
+    font-size: 20px;
+    cursor: pointer;
+    border: 1px solid #aaa;
+}
+
+.botao:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.botao-jogar {
+    font-size: 36px;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    padding: 20px 60px;
+    background-color: #b30000;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    letter-spacing: 3px;
+    text-shadow: 1px 1px 0px #000;
+}
+
+.botao-jogar:hover {
+    background-color: #ff0000;
+}
+
+.caixa {
+    margin-top: 10px;
+    padding: 10px;
+    min-width: 320px;
+    text-align: center;
+    line-height: 1.8;
+}
+
+.escondido {
+    display: none !important;
+}
+
+.tela-menu-layout {
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 80px;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+.tela-menu-layout:not(.escondido) {
+    display: flex !important;
+}
+
+.menu-esquerda {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+.menu-direita {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.cavalo-menu {
+    width: 350px;
+}
+
+.animado {
+    opacity: 0;
+    transform: translateY(80px);
+}
+
+.animado.visivel {
+    animation: subirFadeIn 1s ease forwards;
+}
+
+@keyframes subirFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(80px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.tela-preta {
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.botao-comecar {
+    font-size: 32px;
+    font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+    padding: 20px 60px;
+    background-color: black;
+    color: white;
+    border: 2px solid white;
+    border-radius: 8px;
+    letter-spacing: 3px;
+    cursor: pointer;
+}
+
+.botao-comecar:hover {
+    background-color: white;
+    color: black;
+}
+
+/* ── CORRIDA ── */
+#tela-corrida {
+    background: #1a1a1a;
+    color: white;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+#corrida-header {
+    text-align: center;
+    font-family: Impact, sans-serif;
+    font-size: 26px;
+    margin-bottom: 16px;
+    color: #ffdd00;
+    letter-spacing: 2px;
+}
+
+#pista-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0 10px;
+}
+
+.pista-linha {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.pista-nome {
+    width: 110px;
+    font-family: Impact, sans-serif;
+    font-size: 15px;
+    color: #fff;
+    text-align: right;
+    flex-shrink: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pista-trilho {
+    flex: 1;
+    height: 64px;
+    background: #2e7d32;
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+    border: 2px solid #555;
+}
+
+.linha-chegada {
+    position: absolute;
+    right: 6%;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: repeating-linear-gradient(
+        to bottom,
+        white 0px, white 8px,
+        black 8px, black 16px
+    );
+    z-index: 2;
+}
+
+.cavalo-corrida {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 52px;
+    width: auto;
+    transition: left 2.5s ease;
+    z-index: 3;
+    image-rendering: pixelated;
+}
+
+#podio-container {
+    margin-top: 24px;
+    text-align: center;
+    background: #111;
+    border-radius: 10px;
+    padding: 20px;
+    color: white;
+    font-family: 'Times New Roman', serif;
+    font-size: 20px;
+    line-height: 2;
+}
